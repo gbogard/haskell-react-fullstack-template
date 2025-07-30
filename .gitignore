@@ -1,0 +1,6 @@
+.direnv
+dist-newstyle
+build
+.pgdata
+node_modules
+result

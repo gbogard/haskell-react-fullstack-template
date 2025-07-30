@@ -1,0 +1,24 @@
+{
+    "spellright.language": [
+        "en",
+        "fr"
+    ],
+    "spellright.documentTypes": [
+        "markdown",
+        "latex",
+        "plaintext"
+    ],
+    "editor.formatOnSave": true,
+    "nix.enableLanguageServer": true,
+    "nix.serverPath": "nixd",
+    "nix.serverSettings": {
+        "nixd": {
+            "formatting": {
+                "command": [
+                    "nixfmt"
+                ],
+            },
+        }
+    },
+    "haskell.formattingProvider": "fourmolu",
+}

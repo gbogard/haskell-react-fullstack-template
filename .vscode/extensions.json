@@ -1,0 +1,9 @@
+{
+    "recommendations": [
+        "haskell.haskell",
+        "jnoortheen.nix-ide",
+        "mkhl.direnv",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+    ]
+}

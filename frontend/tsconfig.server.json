@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "sourceMap": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "tsBuildInfoFile": "./dist/tsconfig.server.tsbuildinfo",
+    "incremental": true
+  },
+  "include": [
+    "src/server/index.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
