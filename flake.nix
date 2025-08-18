@@ -36,16 +36,15 @@
           name = "haskell-react-fullstack-template";
 
           shellHook = ''
-            export PGDATA="$(realpath .pgdata)"
-            export PGPORT=5432
+            export PGPORT=5433
             export PGHOST=localhost
-            export PGUSER=$USER
+            export PGUSER=postgres
             export PGPASSWORD=postgres
             export PGDATABASE=postgres
             export DB_URL=postgres://$PGUSER:$PGPASSWORD@$PGHOST:$PGPORT/$PGDATABASE
 
             echo "Welcome to the Haskell / React development environment!"
-            echo "You can start the Postgresql server with 'my_pg_ctl start' and stop it with 'my_pg_ctl stop'."
+            echo "You can start services using 'podman-compose up'"
           '';
 
           inputsFrom = [ (server.server.envFunc { withHoogle = true; }) ];
@@ -60,9 +59,10 @@
             ghcid
             haskellPackages.fourmolu # Haskell code formatter
 
-            # services
-            postgresql
-            wrappedPgctl
+            # container runtime to run services
+            podman
+            podman-compose
+            podman-tui
 
             # utils
             nixfmt-rfc-style # nix formatter

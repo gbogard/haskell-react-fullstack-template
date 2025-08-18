@@ -6,7 +6,7 @@ A template for a full-stack React/Haskell application.
 
 - React frontend with Typescript and server-side rendering (SSR)
 - Haskell backend with Scotty
-- PostgreSQL database
+- Support for running containerized services, like a development database, using Podman and Podman-compose
 - Nix flake to provide a development environment with all the dependencies, and build the application (and, optionally, optimized Docker images)
 - ESLint for linting the front-end code
 - Sensible settings and recommended extensions for VS Code users
@@ -28,8 +28,15 @@ nix develop
 ```
 
 This environment provides the tools to work on the front end (node, npm, etc.) and the backend (GHC, cabal, formolou etc.). 
-It also provides a PostgreSQL server with the database data stored in the local `.pgdata` directory. 
-(See [Initializing and running the development database](#initializing-and-running-the-development-database) for more details.)
+It also provides podman and podman-compose, to run containerized services, like a development database.
+
+**Important:**: if you aren't on NixOS, you need to install the `uidmap` package, because Podman requires it to run containers.
+
+```shell
+sudo apt install uidmap
+```
+
+That's the only thing you'll need to install on your machine. Everything else is made available by the Nix shell.
 
 You can build the application using Nix:
 
@@ -59,34 +66,15 @@ To launch the front end:
 cd frontend && npm run dev
 ```
 
-## Initializing and running the development database
-
-This template comes with a PostgreSQL database for development purposes, and recommends that the database data is stored in the local `.pgdata` directory.
-
-To initialize the postgres cluster, run:
+You can run containerized services using podman-compose:
 
 ```bash
-nix develop
-my_pg_ctl initdb
-my_pg_ctl start
-createdb
+podman-compose up -d
 ```
 
-This will create the database, whose data will be stored in the `.pgdata` directory.
+(You will have to remember to stop them using `podman-compose down` when you're done)
 
-To start the database, run:
-
-```bash
-nix develop --command my_pg_ctl start
-```
-
-To stop the database, run:
-
-```bash
-nix develop --command my_pg_ctl stop
-```
-
-The `my_pg_ctl` command is a wrapper around the `pg_ctl` command that sets the required options to start the PostgreSQL server with the data directory set to `./.pgdata`.
+This template includes a default `docker-compose.yaml` file that starts a Postgresql database.
 
 ## Building Docker images
 
@@ -112,3 +100,26 @@ You can update the `frontend/src/server/config.ts` file to change the contents o
 and can be accessed from the client using the `getConfig` function.
 
 This is useful for example to inject the API URL into the frontend, so that the frontend can make requests to the backend.
+
+## Solving Podman issues
+
+If you're having issues starting containers with Podman, try these troubleshooting steps.
+
+1. Make sure that the `uidmap` package is installed on your system.
+2. Make sure that you have a `~/.config/containers/registries.conf` file that contains the following:
+
+```toml
+unqualified-search-registries = ["docker.io"]
+```
+3. Make sure that you have a `~/.config/containers/policy.json` file that contains the following:
+
+```json
+{
+  "default": [
+    {
+      "type": "insecureAcceptAnything"
+    }
+  ]
+}
+```
+This will allow Podman to pull images from Docker Hub (including potentially dangerous images).
