@@ -10,17 +10,6 @@
       system:
       let
         pkgs = (import (inputs.nixpkgs) { inherit system; });
-        # pg_ctl wrapper that makes it possible to start a postgresql server locally
-        # see https://github.com/NixOS/nixpkgs/issues/83770 for why this is needed
-        wrappedPgctl = pkgs.writeShellScriptBin "my_pg_ctl" ''
-          export PGDATA="$(realpath .pgdata)"
-          if [ "$1" = "initdb" ]; then
-            ${pkgs.postgresql}/bin/pg_ctl "$@"
-          else
-            ${pkgs.postgresql}/bin/pg_ctl -o "-k /tmp" "$@"
-          fi
-        '';
-
         server = import ./server/server.nix { inherit pkgs; };
         frontend = import ./frontend/frontend.nix { inherit pkgs; };
       in
